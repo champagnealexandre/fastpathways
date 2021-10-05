@@ -10,8 +10,11 @@ $ cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
 $ make -C build
 ```
 
-This will compile down to shared and static libraries, and generate two executables (at the moment):
-`build/intchains` and `build/test/fastpathways_unittests`.
+This will compile down to shared and static libraries, and generate the following executables:
+* `build/intchains` - compute the assembly indices of integers under addition
+* `build/subsecond` - determine the smallest integer for which it takes greater than 1s to compute
+the assembly index
+* `build/test/fastpathways_unittests` - test the library
 
 You can run the unit tests explicitly
 ```shell
