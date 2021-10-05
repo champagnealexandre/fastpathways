@@ -1,0 +1,13 @@
+include_directories(Catch2/single_include)
+add_subdirectory(unittests)
+add_executable(${PROJECT_NAME}_unittest ${${PROJECT_NAME}_UNITTEST_SOURCES})
+target_link_libraries(${PROJECT_NAME}_unittest ${PROJECT_NAME}_static)
+
+foreach(UNITTEST_SOURCE ${${PROJECT_NAME}_UNITTEST_SOURCES})
+    file(STRINGS ${UNITTEST_SOURCE} TEST_NAMES REGEX ^TEST_CASE)
+    foreach(TEST_NAME ${TEST_NAMES})
+        string(REGEX MATCH "\"[^\"]+\"" TEST_NAME ${TEST_NAME})
+        string(REGEX REPLACE "\"" "" TEST_NAME ${TEST_NAME})
+        add_test(${PROJECT_NAME}.${TEST_NAME} ${PROJECT_NAME}_unittest ${TEST_NAME})
+    endforeach()
+endforeach()

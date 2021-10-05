@@ -1,0 +1,37 @@
+cmake_minimum_required(VERSION 2.8)
+project(fastpathways CXX)
+
+set(${PROJECT_NAME}_MAJOR 0)
+set(${PROJECT_NAME}_MINOR 0)
+set(${PROJECT_NAME}_PATCH 1)
+set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_MAJOR}.${${PROJECT_NAME}_MINOR}.${${PROJECT_NAME}_PATCH})
+
+message(STATUS "fastpathways version: ${${PROJECT_NAME}_VERSION}")
+
+if (UNIX AND NOT APPLE)
+    add_definitions("-Wall -Wextra -Werror -Wno-unused-parameter -std=c++20")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -pg")
+elseif (APPLE)
+    add_definitions("-Wall -Wextra -Werror -Wno-unused-parameter -std=c++20")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
+	set(CMAKE_MACOSX_RPATH ON)
+endif()
+
+include_directories(include)
+add_subdirectory(src)
+add_library(${PROJECT_NAME} SHARED ${${PROJECT_NAME}_SOURCES})
+add_library(${PROJECT_NAME}_static ${${PROJECT_NAME}_SOURCES})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} VERSION ${${PROJECT_NAME}_VERSION})
+set_target_properties(${PROJECT_NAME}_static PROPERTIES VERSION ${${PROJECT_NAME}_VERSION})
+if (MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/DLIBRARY_EXPORTS")
+else()
+    set_target_properties(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+endif()
+
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME} DESTINATION lib)
+install(TARGETS ${PROJECT_NAME}_static EXPORT ${PROJECT_NAME} DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
+
+enable_testing()
+add_subdirectory(test)
