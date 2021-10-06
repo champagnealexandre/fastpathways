@@ -30,7 +30,11 @@ struct BoundingSequenceA: BoundingSequence {
 };
 
 struct BoundingSequenceC: BoundingSequence {
-    static auto bounds(int64_t, int64_t) -> std::vector<int64_t>;
+    static auto bounds(int64_t, int64_t, int64_t) -> std::vector<int64_t>;
+};
+
+struct BoundingSequenceE: BoundingSequence {
+    static auto bounds(int64_t, int64_t, int64_t) -> std::vector<int64_t>;
 };
 
 auto bounds(int64_t, int64_t) -> std::tuple<std::vector<int64_t>, std::vector<int64_t>>;

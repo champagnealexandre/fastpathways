@@ -43,39 +43,48 @@ static auto twopower(int64_t n) -> std::tuple<int64_t, bool> {
     return { t, n % z == 0 };
 }
 
-auto BoundingSequenceC::bounds(int64_t n, int64_t lb) -> std::vector<int64_t> {
-    int64_t t;
-    bool use_c;
-    std::tie(t, use_c) = twopower(n);
-
+auto BoundingSequenceC::bounds(int64_t n, int64_t t, int64_t lb) -> std::vector<int64_t> {
     auto seq = std::vector<int64_t>(lb + 1);
-
-    if (use_c) {
-        for (auto i = 0; i <= lb - t - 2; ++i) {
-            seq.at(i) = std::ceil(1.0 * n / (3 * (1 << (lb - i - 2))));
-        }
-    } else {
-        for (auto i = 0; i <= lb - t - 2; ++i) {
-            auto den = (1 << t) * ((1 << (lb - t - i - 1)) + 1);
-            seq.at(i) = std::ceil(1.0 * n / den);
-        }
+    for (auto i = 0; i <= lb - t - 2; ++i) {
+        seq.at(i) = std::ceil(1.0 * n / (3 * (1 << (lb - i - 2))));
     }
     for (auto i = std::max(int64_t{0}, lb - t - 1); i <= lb; ++i) {
         seq.at(i) = std::ceil(1.0 * n / (1 << (lb - i)));
     }
+    return seq;
+}
 
+auto BoundingSequenceE::bounds(int64_t n, int64_t t, int64_t lb) -> std::vector<int64_t> {
+    auto seq = std::vector<int64_t>(lb + 1);
+    for (auto i = 0; i <= lb - t - 2; ++i) {
+        seq.at(i) = std::ceil(1.0 * n / ((1 << t) * ((1 << (lb - t - i - 1)) + 1)));
+    }
+    for (auto i = std::max(int64_t{0}, lb - t - 1); i <= lb; ++i) {
+        seq.at(i) = std::ceil(1.0 * n / (1 << (lb - i)));
+    }
     return seq;
 }
 
 auto bounds(int64_t n, int64_t lb) -> std::tuple<std::vector<int64_t>, std::vector<int64_t>> {
-    if (n % 5 != 0) {
-        auto const vertical = BoundingSequenceC::bounds(n, lb);
-        return { vertical, vertical };
+    int64_t t;
+    bool is_div_2n_1;
+    std::tie(t, is_div_2n_1) = twopower(n);
+
+    std::vector<int64_t> vertical;
+    if (is_div_2n_1) {
+        vertical = BoundingSequenceC::bounds(n, t, lb);
     } else {
-        auto const vertical = BoundingSequenceC::bounds(n, lb);
-        auto const slant = BoundingSequenceA::bounds(n, lb);
-        return { vertical, slant };
+        vertical = BoundingSequenceE::bounds(n, t, lb);
     }
+
+    std::vector<int64_t> slant;
+    if (n % 5 != 0) {
+        slant = BoundingSequenceC::bounds(n, t, lb);
+    } else {
+        slant = BoundingSequenceA::bounds(n, lb);
+    }
+
+    return { vertical, slant };
 }
 
 static auto retain(int64_t bound, int64_t a) -> bool {
@@ -113,11 +122,12 @@ auto stackchildren(int64_t n, std::vector<std::vector<int64_t>> &stack) -> void 
     stack.push_back(segment);
 }
 
-auto backup(std::vector<std::vector<int64_t>> &stack) -> bool {
+auto backup(int &i, std::vector<std::vector<int64_t>> &stack) -> bool {
     while (std::size(stack) > 2) {
         stack.back().pop_back();
         if (stack.back().empty()) {
             stack.pop_back();
+            i -= 1;
         } else {
             break;
         }
@@ -130,6 +140,8 @@ auto thurber(int64_t n) -> int64_t {
         throw std::domain_error{"no chains defined for integers less than 1"};
     } else if (n == 1) {
         return 0;
+    } else if (n == 2) {
+        return 1;
     }
 
     auto stack = std::vector<std::vector<int64_t>>{ {1}, {2} };
@@ -139,27 +151,26 @@ auto thurber(int64_t n) -> int64_t {
 
     std::vector<int64_t> vertical, slant;
     while (true) {
+        auto i = 1;
         std::tie(vertical, slant) = bounds(n, lb);
         while (true) {
-            auto const i = static_cast<int64_t>(std::size(stack)) - 1;
-            if (i <= lb) {
+            if (i < lb) {
                 auto const aprev = stack.at(i-1).back();
-                auto const a = stack.at(i).back();
-
-                if (a == n) {
-                    return i;
-                } else if (retain(n, lb, vertical.at(i), slant.at(i), i, aprev, a)) {
+                auto a = stack.at(i).back();
+                if (retain(n, lb, vertical.at(i), slant.at(i + 1), i, aprev, a)) {
                     stackchildren(n, stack);
-                } else if (backup(stack)) {
+                    i += 1;
+                    a = stack.at(i).back();
+                    if (a == n) {
+                        return i;
+                    }
+                } else if (backup(i, stack)) {
                     loop += 1;
                     break;
                 }
-            } else {
-                stack.pop_back();
-                if (std::size(stack) == 2 || backup(stack)) {
-                    loop += 1;
-                    break;
-                }
+            } else if (backup(i, stack)) {
+                loop += 1;
+                break;
             }
             loop += 1;
         }
