@@ -1,4 +1,5 @@
 #include <fastpathways.h>
+#include <algorithm>
 
 static auto nu(int64_t x) -> int64_t {
     return __builtin_popcount(x);
