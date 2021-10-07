@@ -1,4 +1,5 @@
 #include <fastpathways.h>
+#include <algorithm>
 
 static auto sum(std::vector<int64_t> const &xs) -> int64_t {
     auto s = int64_t{};
@@ -8,7 +9,7 @@ static auto sum(std::vector<int64_t> const &xs) -> int64_t {
     return s;
 }
 
-auto isbelow(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
+static auto isbelow(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
     if (v == w || std::size(v) != std::size(w)) {
         return false;
     }
@@ -20,21 +21,21 @@ auto isbelow(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bo
     return true;
 }
 
-auto operator<=>(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> std::partial_ordering {
-    if (std::size(v) != std::size(w)) {
-        return std::partial_ordering::unordered;
+auto operator<(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
+    if (std::size(v) < std::size(w)) {
+        return true;
     }
     for (size_t i = 0; i < std::size(v); ++i) {
         if (v.at(i) < w.at(i)) {
-            return std::partial_ordering::less;
+            return true;
         } else if (v.at(i) > w.at(i)) {
-            return std::partial_ordering::greater;
+            return false;
         }
     }
-    return std::partial_ordering::equivalent;
+    return false;
 }
 
-auto isbasic(std::vector<int64_t> const &xs) -> bool {
+static auto isbasic(std::vector<int64_t> const &xs) -> bool {
     auto s = int64_t{};
     for (auto const &x : xs) {
         s += x;
@@ -45,7 +46,7 @@ auto isbasic(std::vector<int64_t> const &xs) -> bool {
     return s == 1;
 }
 
-auto operator+(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> std::vector<int64_t> {
+static auto operator+(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> std::vector<int64_t> {
     if (std::size(v) != std::size(w)) {
         throw std::invalid_argument{"vectors must have the same size"};
     }
@@ -56,7 +57,7 @@ auto operator+(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> 
     return x;
 }
 
-auto basic(std::vector<int64_t> const &xs) -> std::vector<std::vector<int64_t>> {
+static auto basic(std::vector<int64_t> const &xs) -> std::vector<std::vector<int64_t>> {
     auto const N = std::size(xs);
     auto bs = std::vector<std::vector<int64_t>>{};
     bs.reserve(N);
@@ -72,13 +73,13 @@ auto lowerbound(std::vector<int64_t> const &xs) -> int64_t {
     return lowerbound(sum(xs));
 }
 
-auto ord(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
+static auto ord(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
     auto const a = sum(v);
     auto const b = sum(w);
     return a < b || (a == b && v < w);
 }
 
-auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector<std::vector<int64_t>>> &stack) -> void {
+static auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector<std::vector<int64_t>>> &stack) -> void {
     auto const a = stack.back().back();
     auto const N = std::size(stack);
     auto segment = std::vector<std::vector<int64_t>>{};

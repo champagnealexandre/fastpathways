@@ -9,10 +9,10 @@ set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_MAJOR}.${${PROJECT_NAME}_MINOR}.${
 message(STATUS "fastpathways version: ${${PROJECT_NAME}_VERSION}")
 
 if (UNIX AND NOT APPLE)
-    add_definitions("-Wall -Wextra -Werror -Wno-unused-parameter -std=c++20")
+    add_definitions("-Wall -Wextra -Werror -Wno-unused-parameter -std=c++17")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -pg")
 elseif (APPLE)
-    add_definitions("-Wall -Wextra -Werror -Wno-unused-parameter -std=c++20")
+    add_definitions("-Wall -Wextra -Werror -Wno-unused-parameter -std=c++17")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
 	set(CMAKE_MACOSX_RPATH ON)
 endif()
