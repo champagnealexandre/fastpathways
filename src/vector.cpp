@@ -129,13 +129,13 @@ auto thurber(std::vector<int64_t> const &x) -> int64_t {
                     return i - N;
                 } else if (retain(sum(x), lb, vertical.at(i - N - 1), slant.at(i - N), i - N - 1, sum(aprev), sum(a))) {
                     stackchildren(x, stack);
-                } else if (backup(stack, N)) {
+                } else if (backup(N, stack)) {
                     loop += 1;
                     break;
                 }
             } else {
                 stack.pop_back();
-                if (std::size(stack) == N || backup(stack, N)) {
+                if (std::size(stack) == N || backup(N, stack)) {
                     loop += 1;
                     break;
                 }

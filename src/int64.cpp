@@ -122,37 +122,31 @@ auto stackchildren(int64_t n, std::vector<std::vector<int64_t>> &stack) -> void 
     stack.push_back(segment);
 }
 
-auto backup(int &i, std::vector<std::vector<int64_t>> &stack) -> bool {
-    while (std::size(stack) > 2) {
-        stack.back().pop_back();
-        if (stack.back().empty()) {
-            stack.pop_back();
-            i -= 1;
-        } else {
-            break;
-        }
-    }
-    return std::size(stack) <= 2;
-}
-
 auto thurber(int64_t n) -> int64_t {
     if (n < 1) {
         throw std::domain_error{"no chains defined for integers less than 1"};
     } else if (n == 1) {
         return 0;
-    } else if (n == 2) {
-        return 1;
     }
 
-    auto stack = std::vector<std::vector<int64_t>>{ {1}, {2} };
+    auto stack = std::vector<std::vector<int64_t>>{ {1} };
     auto lb = lowerbound(n);
+    auto const N = std::size(stack);
 
     auto loop = 1;
 
     std::vector<int64_t> vertical, slant;
     while (true) {
-        auto i = 1;
+        auto i = 0;
         std::tie(vertical, slant) = bounds(n, lb);
+        if (std::size(stack) == N) {
+            stackchildren(n, stack);
+            i += 1;
+            auto a = stack.at(i).back();
+            if (a == n) {
+                return i;
+            }
+        }
         while (true) {
             if (i < lb) {
                 auto const aprev = stack.at(i-1).back();
@@ -164,11 +158,11 @@ auto thurber(int64_t n) -> int64_t {
                     if (a == n) {
                         return i;
                     }
-                } else if (backup(i, stack)) {
+                } else if (backup(N, i, stack)) {
                     loop += 1;
                     break;
                 }
-            } else if (backup(i, stack)) {
+            } else if (backup(N, i, stack)) {
                 loop += 1;
                 break;
             }
