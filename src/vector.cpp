@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <fastpathways.h>
 #include <iostream>
+#include <map>
 
 static auto sum(std::vector<int64_t> const &xs) -> int64_t {
     auto s = int64_t{};
@@ -74,10 +75,32 @@ auto lowerbound(std::vector<int64_t> const &xs) -> int64_t {
     return lowerbound(sum(xs));
 }
 
-static auto ord(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
+static auto divides(int64_t n, int64_t m) {
+    if (m == 0) {
+        return n;
+    } else {
+        return static_cast<int64_t>(std::floor(n / m));
+    }
+}
+
+static auto divides(std::vector<int64_t> const &n, std::vector<int64_t> const &m) {
+    int64_t d = divides(n.at(0), m.at(0));
+    for (std::size_t i = 1; i < std::min(std::size(n), std::size(m)); ++i) {
+        d = std::min(d, divides(n.at(i), m.at(i)));
+    }
+    return d;
+}
+
+static auto ord(std::vector<int64_t> const &x, std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
     auto const a = sum(v);
     auto const b = sum(w);
-    return a < b;
+    return a < b || (a == b && divides(x, v) < divides(x, w));
+}
+
+static auto ord(std::vector<int64_t> const &x) -> std::function<int(std::vector<int64_t> const&, std::vector<int64_t> const&)> {
+    return [&x](std::vector<int64_t> const &v, std::vector<int64_t> const &w) {
+        return ord(x, v, w);
+    };
 }
 
 static auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector<std::vector<int64_t>>> &stack) -> void {
@@ -93,17 +116,54 @@ static auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector
             }
         }
     }
-    std::stable_sort(std::begin(segment), std::end(segment), ord);
+    std::stable_sort(std::begin(segment), std::end(segment), ord(x));
     auto const last = std::unique(std::begin(segment), std::end(segment));
     segment.erase(last, std::end(segment));
     stack.push_back(segment);
 }
 
-auto thurber(std::vector<int64_t> const &x) -> int64_t {
-    if (sum(x) == 0) {
+auto reduce(std::vector<int64_t> x) -> std::tuple<std::vector<int64_t>, int64_t> {
+    auto counter = std::map<int64_t,int64_t>{};
+    for (auto const &e : x) {
+        if (counter.count(e)) {
+            counter[e] += 1;
+        } else {
+            counter[e] = 1;
+        }
+    }
+    auto t = 0;
+    std::vector<int64_t> keys;
+    for (auto const &[k,v] : counter) {
+        if (k > 1) {
+            t += v - 1;
+            keys.push_back(k);
+        } else if (k == 1) {
+            t += v;
+        }
+    }
+    std::sort(std::rbegin(keys), std::rend(keys));
+    if (std::size(keys) == 0) {
+        t -= 1;
+    }
+    return { std::move(keys), t };
+}
+
+auto thurber(std::vector<int64_t> x) -> int64_t {
+    if (std::size(x) == 0) {
+        return 0;
+    } else if (sum(x) == 0) {
         throw std::domain_error{"vector is not in the space"};
+    } else if (std::size(x) == 1) {
+        return thurber(x.at(0));
     } else if (isbasic(x)) {
         return 0;
+    }
+
+    auto const reduced = reduce(x);
+    if (std::get<1>(reduced) != 0) {
+        return thurber(std::get<0>(reduced)) + std::get<1>(reduced);
+    } else {
+        std::sort(std::rbegin(x), std::rend(x));
     }
 
     auto stack = std::vector<std::vector<std::vector<int64_t>>>{};

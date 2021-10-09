@@ -63,6 +63,6 @@ auto backup(std::size_t N, std::vector<std::vector<T>> &stack) -> bool {
 }
 
 auto thurber(int64_t) -> int64_t;
-auto thurber(std::vector<int64_t> const &) -> int64_t;
+auto thurber(std::vector<int64_t>) -> int64_t;
 
 auto vectorspace(std::size_t n, int64_t max = 1) -> std::vector<std::vector<int64_t>>;
