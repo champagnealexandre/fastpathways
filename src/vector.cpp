@@ -1,5 +1,6 @@
-#include <fastpathways.h>
 #include <algorithm>
+#include <fastpathways.h>
+#include <iostream>
 
 static auto sum(std::vector<int64_t> const &xs) -> int64_t {
     auto s = int64_t{};
@@ -76,7 +77,7 @@ auto lowerbound(std::vector<int64_t> const &xs) -> int64_t {
 static auto ord(std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
     auto const a = sum(v);
     auto const b = sum(w);
-    return a < b || (a == b && v < w);
+    return a < b;
 }
 
 static auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector<std::vector<int64_t>>> &stack) -> void {
@@ -87,12 +88,12 @@ static auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = i; j < N; ++j) {
             auto const anext = stack.at(i).back() + stack.at(j).back();
-            if (!isbelow(anext, a) && anext <= x) {
+            if (!isbelow(anext, a) && (isbelow(anext, x) || anext == x)) {
                 segment.push_back(anext);
             }
         }
     }
-    std::sort(std::begin(segment), std::end(segment), ord);
+    std::stable_sort(std::begin(segment), std::end(segment), ord);
     auto const last = std::unique(std::begin(segment), std::end(segment));
     segment.erase(last, std::end(segment));
     stack.push_back(segment);
@@ -111,35 +112,41 @@ auto thurber(std::vector<int64_t> const &x) -> int64_t {
         stack.push_back({e});
     }
     auto lb = lowerbound(x);
-    auto N = std::size(stack);
+    auto const N = std::size(stack);
 
     auto loop = 1;
+
     std::vector<int64_t> vertical, slant;
     while (true) {
+        auto i = 0;
+        std::tie(vertical, slant) = bounds(sum(x), lb);
         if (std::size(stack) == N) {
             stackchildren(x, stack);
-        }
-        std::tie(vertical, slant) = bounds(sum(x), lb + 1);
-        while (true) {
-            auto const i = static_cast<int64_t>(std::size(stack));
-            if (i - static_cast<int64_t>(N) <= lb) {
-                auto const aprev = stack.at(i-2).back();
-                auto const a = stack.at(i-1).back();
-
+            i += 1;
+            for (auto const &a : stack.at(N + i - 1)) {
                 if (a == x) {
-                    return i - N;
-                } else if (retain(sum(x), lb, vertical.at(i - N - 1), slant.at(i - N), i - N - 1, sum(aprev), sum(a))) {
+                    return i;
+                }
+            }
+        }
+        while (true) {
+            if (i < lb) {
+                auto const aprev = stack.at(N + i - 2).back();
+                auto a = stack.at(N + i - 1).back();
+                if (retain(sum(x), lb, vertical.at(i), 0, i, sum(aprev), sum(a))) {
                     stackchildren(x, stack);
-                } else if (backup(N, stack)) {
+                    i += 1;
+                    a = stack.at(N + i - 1).back();
+                    if (a == x) {
+                        return i;
+                    }
+                } else if (backup(N, i, stack)) {
                     loop += 1;
                     break;
                 }
-            } else {
-                stack.pop_back();
-                if (std::size(stack) == N || backup(N, stack)) {
-                    loop += 1;
-                    break;
-                }
+            } else if (backup(N, i, stack)) {
+                loop += 1;
+                break;
             }
             loop += 1;
         }
