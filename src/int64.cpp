@@ -142,19 +142,20 @@ auto thurber(int64_t n) -> int64_t {
         if (std::size(stack) == N) {
             stackchildren(n, stack);
             i += 1;
-            auto a = stack.at(i).back();
-            if (a == n) {
-                return i;
+            for (auto const &a : stack.at(N + i - 1)) {
+                if (a == n) {
+                    return i;
+                }
             }
         }
         while (true) {
             if (i < lb) {
-                auto const aprev = stack.at(i-1).back();
-                auto a = stack.at(i).back();
+                auto const aprev = stack.at(N + i - 2).back();
+                auto a = stack.at(N + i - 1).back();
                 if (retain(n, lb, vertical.at(i), slant.at(i + 1), i, aprev, a)) {
                     stackchildren(n, stack);
                     i += 1;
-                    a = stack.at(i).back();
+                    a = stack.at(N + i - 1).back();
                     if (a == n) {
                         return i;
                     }
