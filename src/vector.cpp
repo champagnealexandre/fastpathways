@@ -90,7 +90,7 @@ static auto divides(std::vector<int64_t> const &n, std::vector<int64_t> const &m
     return d;
 }
 
-static auto ord(std::vector<int64_t> const &x, std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
+auto ord(std::vector<int64_t> const &x, std::vector<int64_t> const &v, std::vector<int64_t> const &w) -> bool {
     auto const a = sum(v);
     auto const b = sum(w);
     return a < b || (a == b && divides(x, v) < divides(x, w));
@@ -110,7 +110,7 @@ static auto stackchildren(std::vector<int64_t> const &x, std::vector<std::vector
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = i; j < N; ++j) {
             auto const anext = stack.at(i).back() + stack.at(j).back();
-            if (!isbelow(anext, a) && (isbelow(anext, x) || anext == x)) {
+            if (!isbelow(anext, a) && (anext != a) && (isbelow(anext, x) || anext == x)) {
                 segment.push_back(anext);
             }
         }
