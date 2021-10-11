@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <fastpathways.h>
-#include <iostream>
 #include <map>
 
 static auto sum(std::vector<int64_t> const &xs) -> int64_t {
