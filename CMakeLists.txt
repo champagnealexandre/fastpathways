@@ -33,6 +33,8 @@ add_executable(intchains cmd/intchains.cpp)
 target_link_libraries(intchains ${PROJECT_NAME}_static)
 add_executable(subsecond cmd/subsecond.cpp)
 target_link_libraries(subsecond ${PROJECT_NAME}_static)
+add_executable(strchains cmd/strchains.cpp)
+target_link_libraries(strchains ${PROJECT_NAME}_static)
 
 install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME} DESTINATION lib)
 install(TARGETS ${PROJECT_NAME}_static EXPORT ${PROJECT_NAME} DESTINATION lib)

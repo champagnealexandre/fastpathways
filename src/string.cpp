@@ -11,38 +11,38 @@ static auto isbelow(std::string const &v, std::string const &w) -> bool {
 }
 
 static auto isbasic(std::string const &x) -> bool {
-	return std::size(x) == 1;
+    return std::size(x) == 1;
 }
 
 static auto basic(std::string const &x) -> std::vector<std::string> {
-	std::set<char> chars(std::begin(x), std::end(x));
-	std::vector<std::string> basic(std::size(chars));
-	auto i = 0;
-	for (auto const &c: chars) {
-		basic[i++] = std::string(1, c);
-	}
-	return basic;
+    std::set<char> chars(std::begin(x), std::end(x));
+    std::vector<std::string> basic(std::size(chars));
+    auto i = 0;
+    for (auto const &c: chars) {
+        basic[i++] = std::string(1, c);
+    }
+    return basic;
 }
 
 static auto formula(std::string const &x) -> std::vector<int64_t> {
-	std::map<char, int64_t> counter = {};
-	for (auto const &c : x) {
-		if (counter.count(c)) {
-			counter[c] += 1;
-		} else {
-			counter[c] = 1;
-		}
-	}
-	auto formula = std::vector<int64_t>(std::size(counter));
-	auto i = 0;
-	for (auto const &[k,v] : counter) {
-		formula[i++] = v;
-	}
-	return formula;
+    std::map<char, int64_t> counter = {};
+    for (auto const &c : x) {
+        if (counter.count(c)) {
+            counter[c] += 1;
+        } else {
+            counter[c] = 1;
+        }
+    }
+    auto formula = std::vector<int64_t>(std::size(counter));
+    auto i = 0;
+    for (auto const &[k,v] : counter) {
+        formula[i++] = v;
+    }
+    return formula;
 }
 
 static auto numbasic(std::string const &x) -> std::size_t {
-	return std::size(std::set<char>(std::begin(x), std::end(x)));
+    return std::size(std::set<char>(std::begin(x), std::end(x)));
 }
 
 auto lowerbound(std::string const &x) -> int64_t {
@@ -141,12 +141,12 @@ auto thurber(std::string x) -> int64_t {
 }
 
 auto stringspace(std::size_t n, std::string chars) -> std::vector<std::string> {
-	std::vector<char> alphabet(std::begin(chars), std::end(chars));
-	std::sort(std::begin(alphabet), std::end(alphabet));
-	auto const last = std::unique(std::begin(alphabet), std::end(alphabet));
-	alphabet.erase(last, std::end(alphabet));
+    std::vector<char> alphabet(std::begin(chars), std::end(chars));
+    std::sort(std::begin(alphabet), std::end(alphabet));
+    auto const last = std::unique(std::begin(alphabet), std::end(alphabet));
+    alphabet.erase(last, std::end(alphabet));
 
-	auto const max = std::size(alphabet);
+    auto const max = std::size(alphabet);
 
     auto space = std::vector<std::string>{};
     if (max > 0) {
