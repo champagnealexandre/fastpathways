@@ -522,17 +522,17 @@ static auto const table = std::map<std::string, int64_t>{
     {"bbbbbbbb", 3},
 };
 
-// static auto earnest(std::string str) -> int64_t {
-//     auto const cmd = "bin/earnest " + str;
-//     int64_t c = -1;
-//     auto handle = popen(cmd.c_str(), "r");
-//     auto const n = fscanf(handle, "%ld", &c);
-//     pclose(handle);
-//     if (n != 1) {
-//         c = std::size(str) - 1;
-//     }
-//     return c;
-// }
+static auto earnest(std::string str) -> int64_t {
+    auto const cmd = "bin/earnest " + str;
+    int64_t c = -1;
+    auto handle = popen(cmd.c_str(), "r");
+    auto const n = fscanf(handle, "%ld", &c);
+    pclose(handle);
+    if (n != 1) {
+        c = std::size(str) - 1;
+    }
+    return c;
+}
 
 TEST_CASE("strings", "[string]") {
     SECTION("binary-strings") {
@@ -540,20 +540,4 @@ TEST_CASE("strings", "[string]") {
             REQUIRE(thurber(s) == c);
         }
     }
-    
-    // SECTION("performance") {
-    //     auto start = steady_clock::now();
-    //     for (auto const &[s,c]: table) {
-	//         REQUIRE(thurber(s) == c);
-    //     }
-    //     auto stop = steady_clock::now();
-    //     std::cout << (1e-9 * duration_cast<nanoseconds>(stop - start).count()) << std::endl;
-    //
-    //     start = steady_clock::now();
-    //     for (auto const &[s,c]: table) {
-    //         REQUIRE(earnest(s) == c);
-    //     }
-    //     stop = steady_clock::now();
-    //     std::cout << (1e-9 * duration_cast<nanoseconds>(stop - start).count()) << std::endl;
-    // }
 }

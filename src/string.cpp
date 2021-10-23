@@ -49,11 +49,23 @@ auto lowerbound(std::string const &x) -> int64_t {
     return lowerbound(formula(x));
 }
 
+auto divides(std::string const &x, std::string const &y) -> int64_t {
+    if (std::size(y) > std::size(x)) {
+        return 0;
+    } else if (y == x) {
+        return 1;
+    }
+    int64_t div = 0;
+    for (std::size_t n = 0; n < std::size(x) - std::size(y); ++n) {
+        int64_t count = 0;
+        for (std::size_t pos = n; (pos = x.find(y, pos)) != std::string::npos; pos += std::size(y), ++count);
+        div = std::max(div, count);
+    }
+    return div;
+}
+
 auto ord(std::string const &x, std::string const &v, std::string const &w) -> bool {
-    auto const a = formula(x);
-    auto const b = formula(v);
-    auto const c = formula(w);
-    return ord(a, b, c);
+    return std::size(v) < std::size(w) || (std::size(v) == std::size(w) && divides(x, v) < divides(x, w));
 }
 
 static auto ord(std::string const &x) -> std::function<int(std::string const&, std::string const&)> {
@@ -70,11 +82,25 @@ static auto stackchildren(std::string const &x, std::vector<std::vector<std::str
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = i; j < N; ++j) {
             auto anext = stack.at(i).back() + stack.at(j).back();
-            if (!isbelow(anext, a) && (anext != a) && (isbelow(anext, x) || anext == x)) {
+            auto keep = true;
+            for (std::size_t k = 0; k < N; ++k) {
+                if (isbelow(anext, stack.at(k).back()) || (anext == a)) {
+                    keep = false;
+                    break;
+                }
+            }
+            if (keep && (isbelow(anext, x) || anext == x)) {
                 segment.push_back(anext);
             }
             anext = stack.at(j).back() + stack.at(i).back();
-            if (!isbelow(anext, a) && (anext != a) && (isbelow(anext, x) || anext == x)) {
+            keep = true;
+            for (std::size_t k = 0; k < N; ++k) {
+                if (isbelow(anext, stack.at(k).back()) || (anext == a)) {
+                    keep = false;
+                    break;
+                }
+            }
+            if (keep && (isbelow(anext, x) || anext == x)) {
                 segment.push_back(anext);
             }
         }

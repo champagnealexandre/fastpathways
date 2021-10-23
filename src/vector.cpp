@@ -2,7 +2,7 @@
 #include <fastpathways.h>
 #include <map>
 
-static auto sum(std::vector<int64_t> const &xs) -> int64_t {
+auto sum(std::vector<int64_t> const &xs) -> int64_t {
     auto s = int64_t{};
     for (auto const &x : xs) {
         s += x;
@@ -74,7 +74,7 @@ auto lowerbound(std::vector<int64_t> const &xs) -> int64_t {
     return lowerbound(sum(xs));
 }
 
-static auto divides(int64_t n, int64_t m) {
+auto divides(int64_t n, int64_t m) -> int64_t {
     if (m == 0) {
         return n;
     } else {
@@ -82,7 +82,7 @@ static auto divides(int64_t n, int64_t m) {
     }
 }
 
-static auto divides(std::vector<int64_t> const &n, std::vector<int64_t> const &m) {
+auto divides(std::vector<int64_t> const &n, std::vector<int64_t> const &m) -> int64_t {
     int64_t d = divides(n.at(0), m.at(0));
     for (std::size_t i = 1; i < std::min(std::size(n), std::size(m)); ++i) {
         d = std::min(d, divides(n.at(i), m.at(i)));

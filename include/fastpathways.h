@@ -73,3 +73,9 @@ auto thurber(std::string) -> int64_t;
 
 auto vectorspace(std::size_t n, int64_t max = 1) -> std::vector<std::vector<int64_t>>;
 auto stringspace(std::size_t n, std::string = "ab") -> std::vector<std::string>;
+
+auto divides(int64_t, int64_t) -> int64_t;
+auto divides(std::vector<int64_t> const &, std::vector<int64_t> const&) -> int64_t;
+auto divides(std::string const &, std::string const&) -> int64_t;
+
+auto sum(std::vector<int64_t> const &) -> int64_t;
