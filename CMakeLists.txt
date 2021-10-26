@@ -31,6 +31,8 @@ endif()
 
 add_executable(intchains cmd/intchains.cpp)
 target_link_libraries(intchains ${PROJECT_NAME}_static)
+add_executable(vecchains cmd/vecchains.cpp)
+target_link_libraries(vecchains ${PROJECT_NAME}_static)
 add_executable(subsecond cmd/subsecond.cpp)
 target_link_libraries(subsecond ${PROJECT_NAME}_static)
 add_executable(strchains cmd/strchains.cpp)
