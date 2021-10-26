@@ -522,8 +522,8 @@ static auto const table = std::map<std::string, int64_t>{
     {"bbbbbbbb", 3},
 };
 
-static auto earnest(std::string str) -> int64_t {
-    auto const cmd = "bin/earnest " + str;
+auto ernest(std::string str) -> int64_t {
+    auto const cmd = "bin/ernest " + str;
     int64_t c = -1;
     auto handle = popen(cmd.c_str(), "r");
     auto const n = fscanf(handle, "%ld", &c);
