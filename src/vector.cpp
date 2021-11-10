@@ -153,7 +153,7 @@ auto thurber(std::vector<int64_t> x) -> int64_t {
     } else if (sum(x) == 0) {
         throw std::domain_error{"vector is not in the space"};
     } else if (std::size(x) == 1) {
-        return thurber(x.at(0));
+        return std::get<0>(thurber(x.at(0)));
     } else if (isbasic(x)) {
         return 0;
     }

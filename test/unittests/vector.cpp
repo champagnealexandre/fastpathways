@@ -54,7 +54,7 @@ TEST_CASE("vector-chains", "[vector]" ) {
 
     SECTION("simple cases") {
         for (int n = 1; n <= 100; ++n) {
-            auto const c = thurber(n);
+            auto const c = std::get<0>(thurber(n));
             REQUIRE(thurber(std::vector<int64_t>{n, 0}) == c);
             REQUIRE(thurber(std::vector<int64_t>{0, n}) == c);
             REQUIRE(thurber(std::vector<int64_t>{n, 1}) == c + 1);
@@ -62,6 +62,6 @@ TEST_CASE("vector-chains", "[vector]" ) {
             REQUIRE(thurber(std::vector<int64_t>{n, n}) == c + 1);
             REQUIRE(thurber(std::vector<int64_t>{n, n, n}) == c + 2);
         }
-        REQUIRE(thurber(std::vector<int64_t>{607, 0}) == thurber(607));
+        REQUIRE(thurber(std::vector<int64_t>{607, 0}) == std::get<0>(thurber(607)));
     }
 }

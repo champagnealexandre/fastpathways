@@ -67,7 +67,7 @@ auto backup(std::size_t N, std::vector<std::vector<T>> &stack) -> bool {
 auto ord(std::vector<int64_t> const&, std::vector<int64_t> const&, std::vector<int64_t> const&) -> bool;
 auto ord(std::string const&, std::string const&, std::string const&) -> bool;
 
-auto thurber(int64_t) -> int64_t;
+auto thurber(int64_t) -> std::tuple<int64_t, std::vector<int64_t>>;
 auto thurber(std::vector<int64_t>) -> int64_t;
 auto thurber(std::string) -> int64_t;
 

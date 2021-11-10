@@ -9,7 +9,7 @@ auto time(int64_t n, int N) -> double {
     auto const start = steady_clock::now();
     auto sum = 0;
     for (auto i = 0; i < N; ++i) {
-        sum += thurber(n);
+        sum += std::get<0>(thurber(n));
     }
     auto const stop = steady_clock::now();
     auto const elapsed = 1e-9 * duration_cast<nanoseconds>(stop-start).count();

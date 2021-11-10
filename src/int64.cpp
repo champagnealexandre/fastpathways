@@ -122,11 +122,20 @@ auto stackchildren(int64_t n, std::vector<std::vector<int64_t>> &stack) -> void 
     stack.push_back(segment);
 }
 
-auto thurber(int64_t n) -> int64_t {
+template <typename T>
+auto buildchain(std::vector<std::vector<T>> const &stack) -> std::vector<T> {
+    std::vector<T> chain(std::size(stack));
+    for (std::size_t k = 0; k < std::size(stack); ++k) {
+        chain.at(k) = stack.at(k).back();
+    }
+    return chain;
+}
+
+auto thurber(int64_t n) -> std::tuple<int64_t, std::vector<int64_t>> {
     if (n < 1) {
         throw std::domain_error{"no chains defined for integers less than 1"};
     } else if (n == 1) {
-        return 0;
+        return { 0, {n} };
     }
 
     auto stack = std::vector<std::vector<int64_t>>{ {1} };
@@ -144,7 +153,7 @@ auto thurber(int64_t n) -> int64_t {
             i += 1;
             for (auto const &a : stack.at(N + i - 1)) {
                 if (a == n) {
-                    return i;
+                    return { i, buildchain(stack) };
                 }
             }
         }
@@ -157,7 +166,7 @@ auto thurber(int64_t n) -> int64_t {
                     i += 1;
                     a = stack.at(N + i - 1).back();
                     if (a == n) {
-                        return i;
+                        return { i, buildchain(stack) };
                     }
                 } else if (backup(N, i, stack)) {
                     loop += 1;
