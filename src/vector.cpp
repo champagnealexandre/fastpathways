@@ -199,11 +199,11 @@ auto thurber(std::vector<int64_t> x) -> int64_t {
                     if (a == x) {
                         return i;
                     }
-                } else if (backup(N, i, stack)) {
+                } else if (dropsegment(N, i, stack)) {
                     loop += 1;
                     break;
                 }
-            } else if (backup(N, i, stack)) {
+            } else if (dropsegment(N, i, stack)) {
                 loop += 1;
                 break;
             }

@@ -168,11 +168,11 @@ auto thurber(int64_t n) -> std::tuple<int64_t, std::vector<int64_t>> {
                     if (a == n) {
                         return { i, buildchain(stack) };
                     }
-                } else if (backup(N, i, stack)) {
+                } else if (dropsegment(N, i, stack)) {
                     loop += 1;
                     break;
                 }
-            } else if (backup(N, i, stack)) {
+            } else if (dropsegment(N, i, stack)) {
                 loop += 1;
                 break;
             }

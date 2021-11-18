@@ -64,6 +64,25 @@ auto backup(std::size_t N, std::vector<std::vector<T>> &stack) -> bool {
     return std::size(stack) <= N;
 }
 
+template <class T>
+auto dropsegment(std::size_t N, int &i, std::vector<std::vector<T>> &stack) -> bool {
+    if (std::size(stack) > N) {
+        stack.pop_back();
+        i -= 1;
+        return backup(N, i, stack);
+    }
+    return false;
+}
+
+template <class T>
+auto dropsegment(std::size_t N, std::vector<std::vector<T>> &stack) -> bool {
+    if (std::size(stack) > N) {
+        stack.pop_back();
+        return backup(N, stack);
+    }
+    return false;
+}
+
 auto ord(std::vector<int64_t> const&, std::vector<int64_t> const&, std::vector<int64_t> const&) -> bool;
 auto ord(std::string const&, std::string const&, std::string const&) -> bool;
 
