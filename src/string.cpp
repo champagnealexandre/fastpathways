@@ -145,7 +145,7 @@ auto thurber(std::string x) -> int64_t {
             if (i < lb) {
                 auto const aprev = stack.at(N + i - 2).back();
                 auto a = stack.at(N + i - 1).back();
-                if (retain(std::size(x), lb, vertical.at(i), 0, i, std::size(aprev), std::size(a))) {
+                if (retain(std::size(x), lb, vertical.at(i), slant.at(i+1)-1, i, std::size(aprev), std::size(a))) {
                     stackchildren(x, stack);
                     i += 1;
                     a = stack.at(N + i - 1).back();
