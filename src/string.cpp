@@ -46,7 +46,7 @@ static auto numbasic(std::string const &x) -> std::size_t {
 }
 
 auto lowerbound(std::string const &x) -> int64_t {
-    return lowerbound(formula(x));
+    return thurber(formula(x));
 }
 
 auto divides(std::string const &x, std::string const &y) -> int64_t {
