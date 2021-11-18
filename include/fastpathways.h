@@ -52,33 +52,11 @@ auto backup(std::size_t N, int &i, std::vector<std::vector<T>> &stack) -> bool {
 }
 
 template <class T>
-auto backup(std::size_t N, std::vector<std::vector<T>> &stack) -> bool {
-    while (std::size(stack) > N) {
-        stack.back().pop_back();
-        if (stack.back().empty()) {
-            stack.pop_back();
-        } else {
-            break;
-        }
-    }
-    return std::size(stack) <= N;
-}
-
-template <class T>
 auto dropsegment(std::size_t N, int &i, std::vector<std::vector<T>> &stack) -> bool {
     if (std::size(stack) > N) {
         stack.pop_back();
         i -= 1;
         return backup(N, i, stack);
-    }
-    return false;
-}
-
-template <class T>
-auto dropsegment(std::size_t N, std::vector<std::vector<T>> &stack) -> bool {
-    if (std::size(stack) > N) {
-        stack.pop_back();
-        return backup(N, stack);
     }
     return false;
 }
