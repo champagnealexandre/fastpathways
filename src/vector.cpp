@@ -71,7 +71,7 @@ static auto basic(std::vector<int64_t> const &xs) -> std::vector<std::vector<int
 }
 
 auto lowerbound(std::vector<int64_t> const &xs) -> int64_t {
-    return lowerbound(sum(xs));
+    return std::get<0>(thurber(sum(xs)));
 }
 
 auto divides(int64_t n, int64_t m) -> int64_t {
