@@ -111,6 +111,16 @@ static auto stackchildren(std::string const &x, std::vector<std::vector<std::str
     stack.push_back(segment);
 }
 
+template <class T>
+auto dropsegment(std::size_t N, int &i, std::vector<std::vector<T>> &stack) -> bool {
+    if (std::size(stack) > N) {
+        stack.pop_back();
+        i -= 1;
+        return backup(N, i, stack);
+    }
+    return false;
+}
+
 auto thurber(std::string x) -> int64_t {
     if (std::size(x) == 0) {
         return 0;
@@ -152,11 +162,11 @@ auto thurber(std::string x) -> int64_t {
                     if (a == x) {
                         return i;
                     }
-                } else if (backup(N, i, stack)) {
+                } else if (dropsegment(N, i, stack)) {
                     loop += 1;
                     break;
                 }
-            } else if (backup(N, i, stack)) {
+            } else if (dropsegment(N, i, stack)) {
                 loop += 1;
                 break;
             }
