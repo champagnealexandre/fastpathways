@@ -4,6 +4,10 @@ library(dplyr)
 library(readr)
 library(splines)
 
+# This script estimates the computation time for a given integer using a spline regression model.
+# It also provides a function to estimate the total computation time for all integers from 1 to a given integer.
+# The data is loaded from a CSV file, and the numeric columns are cleaned.
+
 # Load data
 df <- read_csv("assembly_indices.csv", show_col_types = FALSE)
 

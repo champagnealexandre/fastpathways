@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# This script computes the assembly index for a range of integers from 1 to a specified maximum integer.
+# It uses the `intchains` program to perform the calculations and stores the results in a CSV file.
+# The script takes one argument: the maximum integer to compute the assembly index for.
+# The output CSV file will contain three columns: integer, assembly index, and calculation time.
+# Usage: ./compute_assembly_indices.sh <max_integer>
+
 # Ensure an argument was provided
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <max_integer>"
