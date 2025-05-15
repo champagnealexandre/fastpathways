@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <fastpathways.h>
 #include <map>
+#include <functional>
 
 auto sum(std::vector<int64_t> const &xs) -> int64_t {
     auto s = int64_t{};

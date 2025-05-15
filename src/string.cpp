@@ -2,6 +2,7 @@
 #include <fastpathways.h>
 #include <map>
 #include <set>
+#include <functional>
 
 static auto isbelow(std::string const &v, std::string const &w) -> bool {
     if (v == w) {
